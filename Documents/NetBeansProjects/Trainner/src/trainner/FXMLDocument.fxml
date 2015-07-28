@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="684.0" prefWidth="839.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="trainner.FXMLDocumentController">
+    <children>
+      <Pane layoutX="-4.0" layoutY="160.0" opacity="0.95" prefHeight="524.0" prefWidth="240.0" style="-fx-background-color: #0f1721;" stylesheets="@../style.css">
+         <children>
+            <CheckBox fx:id="haarClassifier" layoutX="37.0" layoutY="22.0" mnemonicParsing="false" onAction="#haarSelected" selected="true" text="Haar Classifier">
+               <effect>
+                  <ColorAdjust brightness="-0.21" contrast="0.86" />
+               </effect>
+               <textFill>
+                  <LinearGradient endX="0.023809523809523846" endY="0.319047619047619" startX="0.9285714285714286" startY="0.9761904761904762">
+                     <stops>
+                        <Stop color="#eee3e3" />
+                        <Stop color="WHITE" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </CheckBox>
+            <CheckBox fx:id="lbpClassifier" layoutX="37.0" layoutY="60.0" mnemonicParsing="false" onAction="#lbpSelected" text="LBP Classifier" textFill="#eeecec">
+               <effect>
+                  <ColorAdjust contrast="0.95" hue="-0.98" />
+               </effect>
+            </CheckBox>
+            <Label layoutX="14.0" layoutY="107.0" text="Matricule" textFill="#fff8f8">
+               <effect>
+                  <Blend />
+               </effect>
+            </Label>
+            <TextField fx:id="mat_nu" layoutX="72.0" layoutY="103.0" prefHeight="25.0" prefWidth="159.0" />
+            <Label layoutX="14.0" layoutY="156.0" prefHeight="17.0" prefWidth="195.0" text="Number of training image sets" textFill="#f8f6f6">
+               <effect>
+                  <ColorAdjust brightness="1.0" contrast="-1.0" hue="1.0" saturation="1.0" />
+               </effect>
+            </Label>
+            <TextField fx:id="t_imageSetC" layoutX="64.0" layoutY="182.0" prefHeight="25.0" prefWidth="169.0" />
+            <Button id="button1" fx:id="capture" disable="true" graphicTextGap="5.0" layoutX="8.0" layoutY="289.0" mnemonicParsing="false" onAction="#takeCap" opacity="0.79" prefHeight="27.0" prefWidth="195.0" style="-fx-border-color: #0f1721; -fx-background-color: #243044;" styleClass="buttns" stylesheets="@../style.css" text="Capture" textAlignment="CENTER" textFill="#faf7f7" textOverrun="LEADING_ELLIPSIS">
+               <effect>
+                  <Bloom />
+               </effect>
+            </Button>
+            <Button id="button1" fx:id="save_rec" disable="true" layoutX="8.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="195.0" style="-fx-border-color: #0f1721; -fx-background-color: #243044;" styleClass="buttons" text="Discard Data" textFill="#f5f4f4">
+               <effect>
+                  <Bloom />
+               </effect>
+            </Button>
+            <Button id="button1" fx:id="t_redoC" disable="true" layoutX="12.0" layoutY="337.0" mnemonicParsing="false" onAction="#RedoCapture" prefHeight="25.0" prefWidth="187.0" text="Redo Cature" textFill="#f8f6f6">
+               <effect>
+                  <Bloom />
+               </effect>
+            </Button>
+            <Button id="button1" fx:id="rec" layoutX="14.0" layoutY="235.0" mnemonicParsing="false" onAction="#save_User_Data" prefHeight="25.0" prefWidth="195.0" style="-fx-border-color: #0f1721; -fx-background-color: #243044;" styleClass="buttons" text="Start trainning" textFill="#f5f4f4">
+               <effect>
+                  <Bloom />
+               </effect>
+            </Button>
+         </children>
+      </Pane>
+      <Pane layoutX="1.0" layoutY="1.0" prefHeight="161.0" prefWidth="795.0" style="-fx-background-color: #243044;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+              <Label fx:id="label" minHeight="16" minWidth="69" prefHeight="161.0" prefWidth="247.0" text="FACIAL RECOGNITION TRAINNING SYSTEM" wrapText="true">
+               <font>
+                  <Font name="Calisto MT" size="29.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="0.05238095238095242" endY="0.819047619047619" startX="0.8523809523809525" startY="0.5952380952380952">
+                     <stops>
+                        <Stop color="#2c1616" />
+                        <Stop color="WHITE" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Label>
+            <HBox layoutX="247.0" layoutY="1.0" prefHeight="161.0" prefWidth="549.0">
+               <children>
+                  <ImageView fx:id="t_im1" fitHeight="161.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="t_im2" fitHeight="161.0" fitWidth="187.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="t_im3" fitHeight="161.0" fitWidth="219.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </HBox>
+         </children></Pane>
+      <Pane layoutX="233.0" layoutY="162.0" prefHeight="524.0" prefWidth="606.0" style="-fx-background-color: #0f1721;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="233.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="160.0">
+         <children>
+            <AnchorPane fx:id="tab1" prefHeight="524.0" prefWidth="606.0">
+               <children>
+                  <Pane prefHeight="432.0" prefWidth="549.0" style="-fx-background-color: #0f1721;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView fx:id="trainer_im" fitHeight="486.0" fitWidth="549.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </Pane>
+               </children>
+            </AnchorPane>
+         </children>
+      </Pane>
+    </children>
+</AnchorPane>

@@ -7,25 +7,17 @@ package trainner;
 
 import General.ControlledScreen;
 import General.ScreensController;
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfRect;
-import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
-import org.opencv.imgproc.Imgproc;
 //import static trainner.FXMLDocumentController.camaraInit;
 
 /**
@@ -42,10 +34,10 @@ public class CamaraController implements Initializable, ControlledScreen{
     private AnchorPane tab;
     private Timer timer;
     private Image CamStream;
-     private TimerTask frameGrabber;
+    private TimerTask frameGrabber;
     @FXML
     private ImageView trainer_im;
-    public static camara camaraInit;
+
     ScreensController sc;
     private static Mat frame;
     /**
@@ -55,7 +47,7 @@ public class CamaraController implements Initializable, ControlledScreen{
     public void initialize(URL url, ResourceBundle rb) {
 
         capture_obj = new VideoCapture(0);
-        camaraInit = new camara();
+      
     }    
 
     @Override
@@ -63,14 +55,4 @@ public class CamaraController implements Initializable, ControlledScreen{
         sc=pane;
 // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    public class camara
-   {
-   public void Startcamara()
-   {
-  // startCamera();
-   }
-   }
-     
-   
-    
 }

@@ -49,7 +49,7 @@
                   <Bloom />
                </effect>
             </Button>
-            <Button id="button1" fx:id="save_rec" disable="true" layoutX="8.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="195.0" style="-fx-border-color: #0f1721; -fx-background-color: #243044;" styleClass="buttons" text="Discard Data" textFill="#f5f4f4">
+            <Button id="button1" fx:id="save_rec" disable="true" layoutX="8.0" layoutY="395.0" mnemonicParsing="false" onAction="#discard" prefHeight="25.0" prefWidth="195.0" style="-fx-border-color: #0f1721; -fx-background-color: #243044;" styleClass="buttons" text="Discard Data" textFill="#f5f4f4">
                <effect>
                   <Bloom />
                </effect>

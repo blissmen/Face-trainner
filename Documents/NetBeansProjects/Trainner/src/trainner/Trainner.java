@@ -18,69 +18,7 @@ import org.opencv.core.Core;
  * @author USER
  */
 public class Trainner extends Application {
-    private static int TainingCount=0;
-    private static String TainingDir ="Trainning_Set/";
-    private static String UserId="Default";
-    private static Integer camraState;
     
-    private static int student_status=0;
-
-    public static int getStudent_status() {
-        return student_status;
-    }
-
-    public static Integer getCamraState() {
-        return camraState;
-    }
-
-    public static void setCamraState(Integer camraState) {
-        Trainner.camraState = camraState;
-    }
-    
-    static void setCamara(Integer valueOf) {
-       camraState = valueOf;
-    }
-    static Integer getCamara() {
-      return camraState;
-    }
-    private int CurrentCount=0;
-   
-    public int getCurrentCount() {
-        return CurrentCount;
-    }
-
-    public void setCurrentCount(int CurrentCount) {
-        this.CurrentCount = CurrentCount;
-    }
-    public static void setTainingCount(int TainingCount) {
-        Trainner.TainingCount = TainingCount;
-    }
-
-    public static void setTainingDir(String TainingDir) {
-        Trainner.TainingDir = TainingDir;
-    }
-
-    public static void setUserId(String UserId) {
-        Trainner.UserId = UserId;
-    }
-
-    public static void setStudent_status(int student_status) {
-        student_status = student_status;
-    }
-
-    public static int getTainingCount() {
-        return TainingCount;
-    }
-
-    public static String getTainingDir() {
-        return TainingDir;
-    }
-
-    public static String getUserId() {
-        return UserId;
-    }
-
-  
     
    
     @Override

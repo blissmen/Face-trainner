@@ -14,7 +14,7 @@
     <children>
       <Pane layoutX="-4.0" layoutY="160.0" opacity="0.95" prefHeight="524.0" prefWidth="240.0" style="-fx-background-color: #0f1721;" stylesheets="@../style.css">
          <children>
-            <CheckBox fx:id="haarClassifier" layoutX="37.0" layoutY="22.0" mnemonicParsing="false" onAction="#haarSelected" selected="true" text="Haar Classifier">
+            <CheckBox fx:id="haarClassifier" layoutX="37.0" layoutY="22.0" mnemonicParsing="false" onAction="#haarSelected" text="Haar Classifier">
                <effect>
                   <ColorAdjust brightness="-0.21" contrast="0.86" />
                </effect>

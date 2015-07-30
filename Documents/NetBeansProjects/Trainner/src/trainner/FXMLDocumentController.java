@@ -25,12 +25,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfRect;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
+import static org.opencv.imgproc.Imgproc.equalizeHist;
+import org.opencv.objdetect.CascadeClassifier;
+import org.opencv.objdetect.Objdetect;
+import static org.opencv.objdetect.Objdetect.CASCADE_SCALE_IMAGE;
 
 /**
  *
@@ -47,7 +55,10 @@ public class FXMLDocumentController implements Initializable {
     private Label label;
     boolean cameraActive;
     VideoCapture capture_obj;
-
+    private CascadeClassifier faceCascade;
+	// minimum face size
+	private int absoluteFaceSize;
+	
     private Timer timer;
     private Image CamStream;
     @FXML
@@ -77,51 +88,41 @@ public class FXMLDocumentController implements Initializable {
     private Button capture;
     @FXML
     private Button save_rec;
-    @FXML
-    private CheckBox ol_stu;
-    @FXML
-    private CheckBox new_Stu;
     private trainee user;
+    @FXML
+    private CheckBox haarClassifier;
+    @FXML
+    private CheckBox lbpClassifier;
+  
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         user = new trainee();
         // mat_nu.setText("Default");
-        capture_obj = new VideoCapture(0);
+      
+        this.faceCascade = new CascadeClassifier();
+	this.absoluteFaceSize = 0;
         amount = user.getTainingCount();
-        startCamera();
+        
     }
 
     @FXML
     private void takeCap(ActionEvent event) {
         //this.capture.setText("Next Capture");
         this.t_redoC.setDisable(false);
-        if (cameraActive && amount != 0) {
+        Register(frame);
+        
+          
 
-            // capture_obj.grab();
-            this.timer.cancel();
-            this.timer = null;
-         //   System.out.println(" final "+CamStream);
-            // trainer_im.setImage(CamStream);
-            amount = user.getTainingCount() - 1;
-            user.setTainingCount(amount);
-            capture_obj.release();
-            this.cameraActive = false;
-
-            //Register();
-            sendto_preview();
-
-        } else {
-            startCamera();
-
-        }
+        
     }
 
     protected void startCamera() {
         // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         if (!this.cameraActive) {
 			// disable setting checkboxes
-
+            this.haarClassifier.setDisable(true);
+			this.lbpClassifier.setDisable(true);
             // start the video capture
             this.capture_obj.open(0);
 
@@ -186,8 +187,8 @@ public class FXMLDocumentController implements Initializable {
 
                 // if the frame is not empty, process it
                 if (!frame.empty()) {
-					// face detection
-                    //this.detectAndDisplay(frame);
+					
+                    
                     MatOfRect faces = new MatOfRect();
                     Mat grayFrame = new Mat();
 
@@ -196,11 +197,10 @@ public class FXMLDocumentController implements Initializable {
                     // equalize the frame histogram to improve the result
                     Imgproc.equalizeHist(grayFrame, grayFrame);
                     // convert the Mat object (OpenCV) to Image (JavaFX)
+                    this.detectAndDisplay(frame);
                     imageToShow = mat2Image(frame);
                     boolean file = new File(user.getTainingDir()).mkdir();
-                    Register(frame);
-                    amount = user.getTainingCount() - 1;
-                    user.setTainingCount(amount);
+                    
 
                 }
             } catch (Exception e) {
@@ -255,46 +255,119 @@ public class FXMLDocumentController implements Initializable {
         
         
          */
+        Mat Test = null;
+        equalizeHist(frame,Test);
         System.out.println(frame.toString());
+        if(user.getTainingCount()==0)
+            Dialogs.create().message("This is the last alocated Slot for a Face").showInformation();
         Highgui.imwrite(user.getTainingDir() + "/" + user.getUserId() + "_" + user.getTainingCount() + ".jpg", imFrame);
+        String location =user.getTainingDir() + "/" + user.getUserId() + "_" + user.getTainingCount();
+        user.saveToDb(location,user.getUserId());
+        amount = user.getTainingCount() - 1;
+            user.setTainingCount(amount);
+            t_imageSetC.setText(""+amount);
+          if(user.getTainingCount()<0)
+          {
+            capture.setDisable(true);
+            stopCamera();
+          }
+            
     }
 
     @FXML
     private void save_User_Data(ActionEvent event) {
-
+         capture_obj = new VideoCapture(0);
         //System.out.println("Hello");
-        if ((mat_nu.getText() != null && mat_nu.getText() != "") && (t_imageSetC.getText() != null && t_imageSetC.getText() != "")) {
-            user.setUserId(mat_nu.getText().toString());
-            try {
-                user.setTainingCount(Integer.parseInt(t_imageSetC.getText()));
-            } catch (Exception vv) {
+         rec.setDisable(true);
+         user.setTainingCount(Integer.parseInt(t_imageSetC.getText()));
+         user.setUserId(mat_nu.getText());
+         startCamera();
+         capture.setDisable(false);
+       
+    }
 
-            }
-            capture.setDisable(false);
-        } else {
-            Dialogs.create()
-                    .masthead("Data Error")
-                    .message("User Matricule and image count cant be null")
-                    .showError();
-
-        }
+ private void detectAndDisplay(Mat frames)
+	{
+		// init
+		MatOfRect faces = new MatOfRect();
+		Mat grayFrame = new Mat();
+		
+		// convert the frame in gray scale
+		Imgproc.cvtColor(frames, grayFrame, Imgproc.COLOR_BGR2YUV_I420);
+		// equalize the frame histogram to improve the result
+		Imgproc.equalizeHist(grayFrame, grayFrame);
+		int flags = CASCADE_SCALE_IMAGE;
+		// compute minimum face size (20% of the frame height)
+		if (this.absoluteFaceSize == 0)
+		{
+			int height = grayFrame.rows();
+			if (Math.round(height * 0.2f) > 0)
+			{
+				this.absoluteFaceSize = Math.round(height * 0.2f);
+			}
+		}
+		
+		// detect faces
+		this.faceCascade.detectMultiScale(grayFrame, faces, 1.1f, 4, 0 | Objdetect.CASCADE_SCALE_IMAGE, new Size(
+				20, 20), new Size());
+		
+		// each rectangle in faces is a face
+		Rect[] facesArray = faces.toArray();
+		for (int i = 0; i < facesArray.length; i++){
+			Core.rectangle(frames, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 3);
+                           //Imgproc.equalizeHist(frames, frames);
+                }
+//Mat faceImg = cameraImg(facesArray[0]);
+              
+	}       
+	
+    @FXML
+    private void RedoCapture(ActionEvent event) 
+    {
     }
 
     @FXML
-    private void SetO(ActionEvent event) {
-        new_Stu.setSelected(false);
-        user.setStudent_status(0);
+    private void haarSelected(ActionEvent event) {
+    	// check whether the lpb checkbox is selected and deselect it
+		if (this.lbpClassifier.isSelected())
+			this.lbpClassifier.setSelected(false);
+		
+		this.checkboxSelection("resources/haarcascades/haarcascade_frontalface_default.xml");
+	
+    
     }
 
     @FXML
-    private void SetN(ActionEvent event) {
-        ol_stu.setSelected(false);
-        user.setStudent_status(1);
-
+    private void lbpSelected(ActionEvent event) {
+ 	if (this.haarClassifier.isSelected())
+			this.haarClassifier.setSelected(false);
+		
+		this.checkboxSelection("resources/lbpcascades/lbpcascade_frontalface.xml");
+	
     }
 
     @FXML
-    private void RedoCapture(ActionEvent event) {
+    private void discard(ActionEvent event) {
     }
 
+  private void checkboxSelection(String... classifierPath)
+	{
+		// load the classifier(s)
+		for (String xmlClassifier : classifierPath)
+		{
+			this.faceCascade.load(xmlClassifier);
+		}
+		
+		// now the capture can start
+	//	this.cameraButton.setDisable(false);
+	}
+
+    private void stopCamera() {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     trainer_im.setImage(null);
+     timer=null;
+     
+    
+    }
+	
 }

@@ -44,16 +44,8 @@ public class DatabaseHelper {
         this.resultSet = null;
         this.metaData = null;
         this.connection = null;
-
-        createDB();//create the database if it does not exist
-        // update database connection status
-        connectedToDatabase = true;
-        try {
-            // statement.execute("delete from customers where name = 'Sonias Cousin Guen' ");
-        } catch (Exception dd) {
-            System.out.println(dd.getMessage());
-
-        }
+         connectToDB();
+       
     }
 
 
@@ -252,6 +244,26 @@ public class DatabaseHelper {
                 System.out.println(e.toString());
             }
 
+    }
+
+    private void connectToDB() {
+       String user="root";
+       String password="blissmen";
+        String url = "jdbc:mysql://localhost:3306/facialrecognitionsystem?zeroDateTimeBehavior=convertToNull";
+        
+       try{ 
+           Class.forName("com.mysql.jdbc.Driver");
+           connection = (Connection) DriverManager.getConnection(url, user, password);
+   // System.out.println("" + user +" "+ password);
+        connectedToDatabase = true;
+
+       }
+         catch (Exception e) {
+                e.printStackTrace();
+                        }
+        
+
+// throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     }
 

@@ -5,16 +5,23 @@
  */
 package trainner;
 
+import General.DatabaseHelper;
+
 /**
  *
  * @author USER
  */
 public class trainee {
+
+    public trainee() 
+    {
+     database = new DatabaseHelper();
+    }
     private int TainingCount=0;
     private String TainingDir ="Trainning_Set/";
     private String UserId="Default";
     private Integer camraState;
-    
+    private DatabaseHelper database;
     private int student_status=0;
 
     public int getStudent_status() {
@@ -70,6 +77,11 @@ public class trainee {
 
     public String getUserId() {
         return UserId;
+    }
+
+    void saveToDb(String location,String UserID) {
+    String sql ="insert into `Trainning Data`(Account_Matricule,imPath) values('"+UserID+"','"+location+"') ";    
+    database.Query(sql);
     }
 
   
